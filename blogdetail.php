@@ -88,7 +88,7 @@
                     height="300px !important" alt="Photo">
                   </div>
 
-                  <p><?php echo $result['content']; ?></p>
+                  <h5><?php echo $result['content']; ?></h5>
                   
                 </div>
                 <h5 class="my-4">Comments</h5><hr>

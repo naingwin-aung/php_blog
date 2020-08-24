@@ -15,11 +15,11 @@
         $pageno = 1;
       }
       $numOfrecs = 4;
-      $offset = ($pageno -1 ) * $numOfrecs;
+      $offset = ($pageno -1) * $numOfrecs;
 
       if(empty($_POST['search'])){
           $stm = $pdo->prepare("
-          SELECT * FROM posts ORDER BY id DESC
+          SELECT * FROM users ORDER BY id DESC
           ");
 
           if($stm->execute()) {
@@ -29,16 +29,16 @@
           $total_pages = ceil(count($rawResult)/ $numOfrecs);
 
           $stm = $pdo->prepare("
-            SELECT * FROM posts ORDER BY id DESC LIMIT $offset,$numOfrecs
+            SELECT * FROM users ORDER BY id DESC LIMIT $offset,$numOfrecs
           ");
 
           if($stm->execute()) {
             $result = $stm->fetchAll();
           }
       } else {
-        $searchKey = $_POST['search'];
+         $searchKey = $_POST['search'];
           $stm = $pdo->prepare("
-          SELECT * FROM posts WHERE title LIKE '%$searchKey%' ORDER BY id DESC
+          SELECT * FROM users WHERE name LIKE '%$searchKey%' ORDER BY id DESC
           ");
 
           if($stm->execute()) {
@@ -48,7 +48,7 @@
           $total_pages = ceil(count($rawResult)/ $numOfrecs);
 
           $stm = $pdo->prepare("
-          SELECT * FROM posts WHERE title LIKE '%$searchKey%' ORDER BY id DESC LIMIT $offset,$numOfrecs
+          SELECT * FROM users WHERE name LIKE '%$searchKey%' ORDER BY id DESC LIMIT $offset,$numOfrecs
           ");
 
           if($stm->execute()) {
@@ -64,17 +64,18 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Blog Listings</h3>
+                <h3 class="card-title">User Listings</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <a href="create.php" type="button" class="btn btn-success mb-4">New Blog Posts</a>
+                <a href="user_add.php" type="button" class="btn btn-success mb-4">Create User</a>
                 <table class="table table-bordered">
                   <thead>                  
                     <tr>
                       <th style="width: 10px">#</th>
-                      <th>Title</th>
-                      <th>Content</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Role</th>
                       <th style="width: 160px;">Action</th>
                     </tr>
                   </thead>
@@ -84,13 +85,14 @@
                         <?php foreach($result as $results): ?>
                             <tr>
                                 <td><?php echo $i; ?></td>
-                                <td><?php echo $results['title'];?></td>
+                                <td><?php echo $results['name'];?></td>
                                 <td>
-                                  <?php echo substr($results['content'], 0, 58);?>
+                                  <?php echo $results['email'];?>
                                 </td>
+                                <td><?php if($results['role'] == 1){echo "Admin";} else{echo "User";}?></td>   
                                 <td>
-                                  <a href="edit.php?id=<?php echo $results['id'];?>" type="button" class="btn btn-warning">Edit</a>
-                                  <a href="delete.php?id=<?php echo $results['id'];?>" 
+                                  <a href="user_edit.php?id=<?php echo $results['id'];?>" type="button" class="btn btn-warning">Edit</a>
+                                  <a href="user_delete.php?id=<?php echo $results['id'];?>" 
                                   onclick="return confirm('Are you sure you want to delete this item')"
                                   type="button" class="btn btn-danger">Delete</a>
                                 </td>
@@ -132,4 +134,4 @@
 
   <?php include('footer.html'); ?>
 
-  
+                           

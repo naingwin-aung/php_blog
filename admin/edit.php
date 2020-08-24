@@ -46,7 +46,7 @@
   $result = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
-    <?php include_once('header.html'); ?>
+    <?php include_once('header.php'); ?>
     <div class="content">
       <div class="container-fluid">
         <div class="row">
