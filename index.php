@@ -1,3 +1,11 @@
+<?php
+  session_start();
+  require_once('config/config.php');
+
+  if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
+    header("location: login.php");
+  }
+?>
 
 <!DOCTYPE html>
 <html>
@@ -21,7 +29,7 @@
   
 
   <!-- Content Wrapper. Contains page content -->
-  <div>
+  <div class="content-wrapper" style="margin-left:0px !important">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
@@ -29,24 +37,33 @@
       </div><!-- /.container-fluid -->
     </section>
 
+    <?php $stm = $pdo->prepare("
+        SELECT * FROM posts ORDER BY id DESC
+        ");
+
+        if($stm->execute()) {
+          $result = $stm->fetchAll();
+        }
+    ?>
     <!-- Main content -->
     <section class="content">
       <div class="row">
+        <?php foreach($result as $results): ?>
           <div class="col-md-4">
             <!-- Box Comment -->
             <div class="card card-widget">
               <div class="card-header">
                 <div style="text-align : center;float:none;" class="card-title">
-                  <h4>Blog title</h4>
+                  <h4><?php echo $results['title']?></h4>
                 </div>
                 <!-- /.user-block -->
                 <!-- /.card-tools -->
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <img class="img-fluid pad" src="../dist/img/photo2.png" alt="Photo">
-
-               
+                <div class="text-center">
+                  <a href="blogdetail.php?id=<?php echo $results['id']; ?>"><img src="admin/images/<?php echo $results['image'];?>" height="200px !important"></a>
+                </div>
               </div>
               <!-- /.card-body -->
               <!-- /.card-footer -->
@@ -55,129 +72,7 @@
             </div>
             <!-- /.card -->
           </div>
-
-          <div class="col-md-4">
-            <!-- Box Comment -->
-            <div class="card card-widget">
-              <div class="card-header">
-                <div style="text-align : center;float:none;" class="card-title">
-                  <h4>Blog title</h4>
-                </div>
-                <!-- /.user-block -->
-                <!-- /.card-tools -->
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <img class="img-fluid pad" src="../dist/img/photo2.png" alt="Photo">
-
-               
-              </div>
-              <!-- /.card-body -->
-              <!-- /.card-footer -->
-              
-              <!-- /.card-footer -->
-            </div>
-            <!-- /.card -->
-          </div>
-          <div class="col-md-4">
-            <!-- Box Comment -->
-            <div class="card card-widget">
-              <div class="card-header">
-                <div style="text-align : center;float:none;" class="card-title">
-                  <h4>Blog title</h4>
-                </div>
-                <!-- /.user-block -->
-                <!-- /.card-tools -->
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <img class="img-fluid pad" src="../dist/img/photo2.png" alt="Photo">
-
-               
-              </div>
-              <!-- /.card-body -->
-              <!-- /.card-footer -->
-              
-              <!-- /.card-footer -->
-            </div>
-            <!-- /.card -->
-          </div>
-          <!-- /.col -->
-          
-          <!-- /.col -->
-        </div>
-        
-        <div class="row">
-          <div class="col-md-4">
-            <!-- Box Comment -->
-            <div class="card card-widget">
-              <div class="card-header">
-                <div style="text-align : center;float:none;" class="card-title">
-                  <h4>Blog title</h4>
-                </div>
-                <!-- /.user-block -->
-                <!-- /.card-tools -->
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <img class="img-fluid pad" src="../dist/img/photo2.png" alt="Photo">
-
-               
-              </div>
-              <!-- /.card-body -->
-              <!-- /.card-footer -->
-              
-              <!-- /.card-footer -->
-            </div>
-            <!-- /.card -->
-          </div>
-
-          <div class="col-md-4">
-            <!-- Box Comment -->
-            <div class="card card-widget">
-              <div class="card-header">
-                <div style="text-align : center;float:none;" class="card-title">
-                  <h4>Blog title</h4>
-                </div>
-                <!-- /.user-block -->
-                <!-- /.card-tools -->
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <img class="img-fluid pad" src="../dist/img/photo2.png" alt="Photo">
-
-               
-              </div>
-              <!-- /.card-body -->
-              <!-- /.card-footer -->
-              
-              <!-- /.card-footer -->
-            </div>
-            <!-- /.card -->
-          </div>
-          <div class="col-md-4">
-            <!-- Box Comment -->
-            <div class="card card-widget">
-              <div class="card-header">
-                <div style="text-align : center;float:none;" class="card-title">
-                  <h4>Blog title</h4>
-                </div>
-                <!-- /.user-block -->
-                <!-- /.card-tools -->
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <img class="img-fluid pad" src="../dist/img/photo2.png" alt="Photo">
-
-               
-              </div>
-              <!-- /.card-body -->
-              <!-- /.card-footer -->
-              
-              <!-- /.card-footer -->
-            </div>
-            <!-- /.card -->
-          </div>
+        <?php endforeach; ?>
           <!-- /.col -->
           
           <!-- /.col -->
@@ -186,19 +81,17 @@
     </section>
     <!-- /.content -->
 
-    <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
-      <i class="fas fa-chevron-up"></i>
-    </a>
   </div>
   <!-- /.content-wrapper -->
 
-  <footer class="main-footer" style="margin-left:0 !important">
-    <div class="float-right d-none d-sm-block">
-      <b>Version</b> 3.0.5
-    </div>
-    <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong> All rights
-    reserved.
-  </footer>
+  <footer class="main-footer ml-0">
+     <!-- To the right -->
+     <div class="float-right d-none d-sm-inline">
+       <a href="logout.php" class="btn btn-default">Logout</a>
+     </div>
+     <!-- Default to the left -->
+     <strong>Copyright &copy; 2020 <a href="#">A Programmer</a>
+   </footer>
 
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
