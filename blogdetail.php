@@ -16,6 +16,16 @@
   $stmtcmt->execute();
   $resultcmt = $stmtcmt->fetchAll(PDO::FETCH_ASSOC);
 
+  $resultau = [];
+  if($resultcmt) {
+    foreach($resultcmt as $key => $value) {
+      $authorId = $resultcmt[$key]['author_id'];
+      $stmtau = $pdo->prepare("SELECT * FROM users WHERE id=$authorId");
+      $stmtau->execute();
+      $resultau[] = $stmtau->fetch(PDO::FETCH_ASSOC);
+    }
+  }
+
   if($_POST) {
     $comment = $_POST['comment'];
 
@@ -88,16 +98,17 @@
                   <div class="card-comment">
                     <!-- User image -->
   
-                    <div class="comment-text ml-0">
-                      <?php foreach ($resultcmt as $resultcmts): ?>
-                        <span class="username">
-                          <?php echo $_SESSION['user_name']; ?>
-                          <span class="text-muted float-right"><?php echo $resultcmts['created_at']; ?></span>
-                        </span><!-- /.username -->
-                        <?php echo $resultcmts['context']; ?>
+                    <?php if($resultcmt): ?>
+                      <div class="comment-text ml-0">                  
+                        <?php foreach($resultcmt as $key => $value): ?>
+                          <span class="username">
+                            <?php print_r($resultau[$key]['name']); ?>
+                            <span class="text-muted float-right"><?php echo $value['created_at']; ?></span>
+                          </span><!-- /.username -->
+                        <?php echo $value['context']; ?>
                       <?php endforeach; ?>
-                    </div>
-                    <!-- /.comment-text -->
+                      </div>
+                    <?php endif; ?>
                   </div>
                   <!-- /.card-comment -->
                 </div>

@@ -37,13 +37,32 @@
       </div><!-- /.container-fluid -->
     </section>
 
-    <?php $stm = $pdo->prepare("
+    <?php 
+      if(!empty($_GET['pageno'])) {
+        $pageno = $_GET['pageno'];
+      } else {
+        $pageno = 1;
+      }
+      $numOfrecs = 6;
+      $offset = ($pageno -1 ) * $numOfrecs;
+
+      $stm = $pdo->prepare("
         SELECT * FROM posts ORDER BY id DESC
         ");
 
         if($stm->execute()) {
-          $result = $stm->fetchAll();
+            $rawResult = $stm->fetchAll();
         }
+
+        $total_pages = ceil(count($rawResult)/ $numOfrecs);
+
+          $stm = $pdo->prepare("
+            SELECT * FROM posts ORDER BY id DESC LIMIT $offset,$numOfrecs
+          ");
+
+          if($stm->execute()) {
+            $result = $stm->fetchAll();
+          }
     ?>
     <!-- Main content -->
     <section class="content">
@@ -77,10 +96,23 @@
           
           <!-- /.col -->
         </div>
-        
+        <div class="row float-right mr-0">
+                  <nav aria-label= "Page navigation example" class="mt-4">
+                      <ul class="pagination">
+                          <li class="page-item"> <a href="?pageno=1" class="page-link">First</a></li>
+                          <li class="page-item <?php if($pageno <= 1){echo 'disabled';} ?>"> 
+                            <a href="<?php if($pageno <= 1){echo '#';} else {echo '?pageno='.($pageno-1);}?>" class="page-link">Previous</a>
+                          </li>
+                          <li class="page-item"> <a href="#" class="page-link"><?php echo $pageno; ?></a></li>
+                          <li class="page-item <?php if($pageno >= $total_pages){echo 'disabled';} ?>"> 
+                            <a href="<?php if($pageno >=$total_pages){echo '#';} else {echo '?pageno='.($pageno+1);}?>" class="page-link">Next</a>
+                          </li>
+                          <li class="page-item"> <a href="?pageno=<?php echo $total_pages; ?>" class="page-link">Last</a></li>
+                      </ul>
+                  </nav>
+                </div>
     </section>
     <!-- /.content -->
-
   </div>
   <!-- /.content-wrapper -->
 
