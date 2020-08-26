@@ -49,7 +49,7 @@
             $result = $stm->fetchAll();
           }
       } else {
-        $searchKey = $_POST['search'] ? $_POST['search'] : $_COOKIE['search'];
+        $searchKey = !empty($_POST['search']) ? $_POST['search'] : $_COOKIE['search'];
           $stm = $pdo->prepare("
           SELECT * FROM posts WHERE title LIKE '%$searchKey%' ORDER BY id DESC
           ");
