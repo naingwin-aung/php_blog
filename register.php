@@ -20,15 +20,15 @@ if($_POST) {
       echo "<script>alert('Email duplicated')</script>";
    } else {
       $stm = $pdo->prepare("
-         INSERT INTO users (name, password, email) VALUES
-         (:name, :password, :email)
+         INSERT INTO users (name, password, email, role) VALUES
+         (:name, :password, :email, :role)
       ");
 
-      $stm->bindParam(":name", $name);
-      $stm->bindParam(":password", $password);
-      $stm->bindParam(":email", $email);
+        $result = $stm->execute(
+            array(':name' => $name, ':email' =>$email, ':password' =>$password, ':role'=>0)
+        );
 
-      if($stm->execute()) {
+      if($result) {
          echo "<script>alert('Successfully register;You can login now');window.location.href='login.php';</script>";
       }
    }

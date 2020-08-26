@@ -2,7 +2,7 @@
   session_start();
   require_once('../config/config.php');
 
-  if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
+  if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in']) && $_SESSION['role'] != 1) {
     header("location: login.php");
   }
 
