@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once('config/config.php');
+require_once('config/common.php');
+
 if($_POST) {
   $email = $_POST['email'];
   $password = $_POST['password'];
@@ -73,7 +75,7 @@ if($_POST) {
                     <div class="col-md-4 mx-auto login">
                         <p class="text-center">Sign in to the sytem to continue</p>
                         <form action="login.php" method="POST">
-
+                        <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
                             <div class="form-group">
                                 <input type="email" name="email" placeholder="Email" class="finput">
                             </div>

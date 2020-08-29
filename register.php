@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once('config/config.php');
+require_once('config/common.php');
+
 if($_POST) {
     if(empty($_POST['name']) || empty($_POST['email']) || empty($_POST['password']) || strlen($_POST['password']) < 4) {
         if(empty($_POST['name'])) {
@@ -97,6 +99,7 @@ if($_POST) {
                     <div class="col-md-4 mx-auto login">
                         <p class="text-center">Register new account</p>
                         <form action="register.php" method="POST">
+                        <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
                            <div class="form-group">
                            <p style="color:red;"><?php echo empty($nameError) ? '' : '*'.$nameError;?></p>
                                 <input type="text" name="name" placeholder="Name" class="finput">
