@@ -29,6 +29,7 @@
        } 
 
     } else {
+       $password = password_hash($_POST['password'],PASSWORD_DEFAULT);
      if(empty($_POST['role'])) {
         $role = 0;
      } else {
@@ -47,7 +48,7 @@
          (:name, :password, :email, :role)
         ");
         $stm->bindParam(':name', $_POST['name']);
-        $stm->bindParam(':password', $_POST['password']);
+        $stm->bindParam(':password',$password);
         $stm->bindParam(':email', $_POST['email']);
         $stm->bindParam(':role', $role);
 
