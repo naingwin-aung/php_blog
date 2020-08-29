@@ -27,19 +27,25 @@
   }
 
   if($_POST) {
-    $comment = $_POST['comment'];
+    if(empty($_POST['comment'])) {
+      if(empty($_POST['comment'])) {
+        $cmtError = 'Comment cannot be null';
+      }
+    } else {
+      $comment = $_POST['comment'];
 
-       $stm = $pdo->prepare("
-          INSERT INTO comments (context, author_id, post_id) VALUES
-          (:context, :author_id, :post_id)
-       ");
- 
-       $result = $stm->execute(
-         array(':context'=>$comment,':author_id'=>$_SESSION['user_id'],':post_id'=>$blogId)
-       );
-       if($result) {
-         header("Location: blogdetail.php?id=".$blogId);
-       }
+      $stm = $pdo->prepare("
+         INSERT INTO comments (context, author_id, post_id) VALUES
+         (:context, :author_id, :post_id)
+      ");
+
+      $result = $stm->execute(
+        array(':context'=>$comment,':author_id'=>$_SESSION['user_id'],':post_id'=>$blogId)
+      );
+      if($result) {
+        header("Location: blogdetail.php?id=".$blogId);
+      }
+    }
     }
 ?>
 
@@ -118,6 +124,7 @@
                     <img class="img-fluid img-circle img-sm" src="../dist/img/user4-128x128.jpg" alt="Alt Text">
                     <!-- .img-push is used to add margin to elements next to floating images -->
                     <div class="img-push">
+                    <p style="color:red;"><?php echo empty($cmtError) ? '' : '*'.$cmtError;?></p>
                       <input type="text" name="comment" class="form-control form-control-sm" placeholder="Press enter to post comment">
                     </div>
                   </form>

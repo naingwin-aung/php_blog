@@ -2,11 +2,33 @@
   session_start();
   require_once('../config/config.php');
 
-  if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in']) && $_SESSION['role'] != 1) {
+  if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
     header("location: login.php");
   }
 
+  if($_SESSION['role'] != 1) {
+   header('location: login.php');
+ }
+
   if($_POST) {
+   if(empty($_POST['name']) || empty($_POST['email']) || empty($_POST['password']) || strlen($_POST['password']) < 4) {
+      if(empty($_POST['name'])) {
+        $nameError = 'Name cannot be null';
+      }
+
+      if(empty($_POST['email'])) {
+        $emailError = 'Email cannot be null';
+      }
+
+      if(empty($_POST['password'])) {
+         $passwordError = 'Password cannot be null';
+       }
+       
+       if(strlen($_POST['password']) < 4) {
+          $passwordError = "Password should be 4 character at least";
+       } 
+
+    } else {
      if(empty($_POST['role'])) {
         $role = 0;
      } else {
@@ -33,6 +55,7 @@
            echo "<script>alert('Successfully added');window.location.href='user.php';</script>";
         }
      }
+   }
   }
 ?>
 
@@ -46,17 +69,20 @@
                   <form action="user_add.php" method="POST">
                      <div class="form-group">
                      <label for="">Name</label>
-                     <input type="text" class="form-control" name="name" required>
+                     <p style="color:red;"><?php echo empty($nameError) ? '' : '*'.$nameError;?></p>
+                     <input type="text" class="form-control" name="name">
                      </div>
 
                      <div class="form-group">
                      <label for="">Email</label>
-                     <input type="text" class="form-control" name="email" required>
+                     <p style="color:red;"><?php echo empty($emailError) ? '' : '*'.$emailError;?></p>
+                     <input type="text" class="form-control" name="email">
                      </div>
 
                      <div class="form-group">
                      <label for="">Password</label>
-                     <input type="text" class="form-control" name="password" required>
+                     <p style="color:red;"><?php echo empty($passwordError) ? '' : '*'.$passwordError;?></p>
+                     <input type="text" class="form-control" name="password">
                      </div>
 
                      <div class="form-group">

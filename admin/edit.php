@@ -11,6 +11,16 @@
   }
 
   if($_POST) {
+    if(empty($_POST['title']) || empty($_POST['content'])) {
+      if(empty($_POST['title'])) {
+        $titleError = 'Title cannot be null';
+      }
+
+      if(empty($_POST['content'])) {
+        $contentError = 'Content cannot be null';
+      }
+
+    } else {
       $id = $_GET['id'];
       $title = $_POST['title'];
       $content = $_POST['content'];
@@ -42,6 +52,7 @@
                 header('location: index.php');
             }
       }
+    }
   }
 
   $stmt = $pdo->prepare("SELECT * FROM posts WHERE id=" .$_GET['id']);
@@ -61,11 +72,13 @@
                   <div class="form-group">
                     
                     <label for="">Title</label>
-                    <input type="text" class="form-control" name="title" value="<?php echo $result['title'];?>" required>
+                    <p style="color:red;"><?php echo empty($titleError) ? '' : '*'.$titleError;?></p>
+                    <input type="text" class="form-control" name="title" value="<?php echo $result['title'];?>">
                   </div>
 
                   <div class="form-group">
                     <label for="">Content</label>
+                    <p style="color:red;"><?php echo empty($contentError) ? '' : '*'.$contentError;?></p>
                     <textarea name="content" id="" cols="30" rows="10" class="form-control"><?php echo $result['content']; ?></textarea>
                   </div>
 

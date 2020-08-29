@@ -2,36 +2,55 @@
 session_start();
 require_once('config/config.php');
 if($_POST) {
-   $name = $_POST['name'];
-   $email = $_POST['email'];
-   $password = $_POST['password'];
+    if(empty($_POST['name']) || empty($_POST['email']) || empty($_POST['password']) || strlen($_POST['password']) < 4) {
+        if(empty($_POST['name'])) {
+          $nameError = 'Name cannot be null';
+        }
+  
+        if(empty($_POST['email'])) {
+          $emailError = 'Email cannot be null';
+        }
+  
+        if(empty($_POST['password'])) {
+           $passwordError = 'Password cannot be null';
+         }
+         
+         if(strlen($_POST['password']) < 4) {
+            $passwordError = "Password should be 4 character at least";
+         } 
+  
+      } else {
+            $name = $_POST['name'];
+            $email = $_POST['email'];
+            $password = $_POST['password'];
 
-   $stm = $pdo->prepare("
-   SELECT * FROM users WHERE email = :email
-   ");
+            $stm = $pdo->prepare("
+            SELECT * FROM users WHERE email = :email
+            ");
 
-   $stm->bindValue(":email", $email);
+            $stm->bindValue(":email", $email);
 
-   if($stm->execute()) {
-      $user = $stm->fetch(PDO::FETCH_ASSOC);
-   }
+            if($stm->execute()) {
+                $user = $stm->fetch(PDO::FETCH_ASSOC);
+            }
 
-   if($user) {
-      echo "<script>alert('Email duplicated')</script>";
-   } else {
-      $stm = $pdo->prepare("
-         INSERT INTO users (name, password, email, role) VALUES
-         (:name, :password, :email, :role)
-      ");
+            if($user) {
+                echo "<script>alert('Email duplicated')</script>";
+            } else {
+                $stm = $pdo->prepare("
+                    INSERT INTO users (name, password, email, role) VALUES
+                    (:name, :password, :email, :role)
+                ");
 
-        $result = $stm->execute(
-            array(':name' => $name, ':email' =>$email, ':password' =>$password, ':role'=>0)
-        );
+                    $result = $stm->execute(
+                        array(':name' => $name, ':email' =>$email, ':password' =>$password, ':role'=>0)
+                    );
 
-      if($result) {
-         echo "<script>alert('Successfully register;You can login now');window.location.href='login.php';</script>";
-      }
-   }
+                if($result) {
+                    echo "<script>alert('Successfully register;You can login now');window.location.href='login.php';</script>";
+                }
+            }
+    }
 }
 
 ?>
@@ -79,14 +98,17 @@ if($_POST) {
                         <p class="text-center">Register new account</p>
                         <form action="register.php" method="POST">
                            <div class="form-group">
+                           <p style="color:red;"><?php echo empty($nameError) ? '' : '*'.$nameError;?></p>
                                 <input type="text" name="name" placeholder="Name" class="finput">
                             </div>
 
                             <div class="form-group">
+                            <p style="color:red;"><?php echo empty($emailError) ? '' : '*'.$emailError;?></p>
                                 <input type="email" name="email" placeholder="Email" class="finput">
                             </div>
 
                             <div class="form-group">
+                            <p style="color:red;"><?php echo empty($passwordError) ? '' : '*'.$passwordError;?></p>
                                 <input type="password" name="password" placeholder="Enter password" class="finput">
                             </div>
 

@@ -11,6 +11,21 @@
   }
 
   if($_POST) {
+    if(empty($_POST['name']) || empty($_POST['email'])) {
+      if(empty($_POST['name'])) {
+        $nameError = 'Name cannot be null';
+      }
+
+      if(empty($_POST['email'])) {
+        $emailError = 'Email cannot be null';
+      }
+
+    }elseif(!empty($_POST['password']) && strlen($_POST['password']) < 4) {
+      $passwordError = "Password should be 4 character at least";
+    }else {
+      $name = $_POST['name'];
+      $email = $_POST['email'];
+      $password = $_POST['password'];
      if(empty($_POST['role'])) {
         $role = 0;
      } else {
@@ -25,20 +40,19 @@
       if($user) {
          echo "<script>alert('Email duplicated')</script>";
       } else {
-         $stm = $pdo->prepare("UPDATE users SET name=:name, email=:email, password=:password, role=:role WHERE id=".$_GET['id']);
          
-         $stm->bindParam(':name', $_POST['name']);
-         $stm->bindParam(':email', $_POST['email']);
-         $stm->bindParam(':password', $_POST['password']);
-         $stm->bindParam(':role', $role);
-
-         $result = $stm->execute();
-            
-         if($result) {
+        if($password != null) {
+          $stm = $pdo->prepare("UPDATE users SET name='$name', email='$email', password='$password', role='$role' WHERE id=".$_GET['id']);
+        } else {
+          $stm = $pdo->prepare("UPDATE users SET name='$name', email='$email', role='$role' WHERE id=".$_GET['id']);
+        }
+        $result = $stm->execute();
+         if(isset($result)) {
             header('location: user.php'); 
          }
       }
     }
+  }
 
    $stmt = $pdo->prepare("SELECT * FROM users WHERE id=" .$_GET['id']);
    $stmt->execute();
@@ -56,17 +70,21 @@
                 <form action="user_edit.php?id=<?php echo $result['id']; ?>" method="POST">
                   <div class="form-group">  
                     <label for="">Name</label>
-                    <input type="text" class="form-control" name="name" value="<?php echo $result['name'];?>" required>
+                    <p style="color:red;"><?php echo empty($nameError) ? '' : '*'.$nameError;?></p>
+                    <input type="text" class="form-control" name="name" value="<?php echo $result['name'];?>">
                   </div>
 
                   <div class="form-group">  
                     <label for="">Email</label>
-                    <input type="email" class="form-control" name="email" value="<?php echo $result['email'];?>" required>
+                    <p style="color:red;"><?php echo empty($emailError) ? '' : '*'.$emailError;?></p>
+                    <input type="email" class="form-control" name="email" value="<?php echo $result['email'];?>">
                   </div>
 
                   <div class="form-group">  
-                    <label for="">Password</label>
-                    <input type="text" class="form-control" name="password" value="<?php echo $result['password'];?>" required>
+                    <label for="">Password</label><br>
+                    <small>The user already have a password</small>
+                    <p style="color:red;"><?php echo empty($passwordError) ? '' : '*'.$passwordError;?></p>
+                    <input type="text" class="form-control" name="password">
                   </div>
 
                   <?php if($result['role'] == 0): ?>
