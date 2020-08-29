@@ -75,13 +75,13 @@
                     
                     <label for="">Title</label>
                     <p style="color:red;"><?php echo empty($titleError) ? '' : '*'.$titleError;?></p>
-                    <input type="text" class="form-control" name="title" value="<?php echo $result['title'];?>">
+                    <input type="text" class="form-control" name="title" value="<?php echo escape($result['title'])?>">
                   </div>
 
                   <div class="form-group">
                     <label for="">Content</label>
                     <p style="color:red;"><?php echo empty($contentError) ? '' : '*'.$contentError;?></p>
-                    <textarea name="content" id="" cols="30" rows="10" class="form-control"><?php echo $result['content']; ?></textarea>
+                    <textarea name="content" id="" cols="30" rows="10" class="form-control"><?php echo escape($result['content']) ?></textarea>
                   </div>
 
                   <div class="form-group">

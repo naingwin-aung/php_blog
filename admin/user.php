@@ -1,6 +1,7 @@
 <?php
   session_start();
   require_once('../config/config.php');
+  require_once('../config/common.php');
 
   if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
     header("location: login.php");
@@ -98,9 +99,9 @@
                         <?php foreach($result as $results): ?>
                             <tr>
                                 <td><?php echo $i; ?></td>
-                                <td><?php echo $results['name'];?></td>
+                                <td><?php echo escape($results['name'])?></td>
                                 <td>
-                                  <?php echo $results['email'];?>
+                                  <?php echo escape($results['email'])?>
                                 </td>
                                 <td><?php if($results['role'] == 1){echo "Admin";} else{echo "User";}?></td>   
                                 <td>

@@ -81,7 +81,7 @@
               <div class="card card-widget">
                 <div class="card-header">
                 <div style="text-align : center;float:none;" class="card-title">
-                  <h4><?php echo $result['title'];?></h4>
+                  <h4><?php echo escape($result['title'])?></h4>
                 </div>
                   <!-- /.user-block -->
                   
@@ -95,7 +95,7 @@
                     height="300px !important" alt="Photo">
                   </div>
 
-                  <h5><?php echo $result['content']; ?></h5>
+                  <h5><?php echo escape($result['content']) ?></h5>
                   
                 </div>
                 <h5 class="my-4">Comments</h5><hr>
@@ -109,10 +109,10 @@
                       <div class="comment-text ml-0">                  
                         <?php foreach($resultcmt as $key => $value): ?>
                           <span class="username">
-                            <?php print_r($resultau[$key]['name']); ?>
-                            <span class="text-muted float-right"><?php echo $value['created_at']; ?></span>
+                            <?php echo escape($resultau[$key]['name']); ?>
+                            <span class="text-muted float-right"><?php echo escape($value['created_at']) ?></span>
                           </span><!-- /.username -->
-                        <?php echo $value['context']; ?>
+                        <?php echo escape($value['context']) ?>
                       <?php endforeach; ?>
                       </div>
                     <?php endif; ?>
