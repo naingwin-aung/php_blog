@@ -73,7 +73,7 @@
                   <div class="form-group">  
                     <label for="">Name</label>
                     <p style="color:red;"><?php echo empty($nameError) ? '' : '*'.$nameError;?></p>
-                    <input type="text" class="form-control" name="name" value="<?php echo escaape($result['name'])?>">
+                    <input type="text" class="form-control" name="name" value="<?php echo escape($result['name'])?>">
                   </div>
 
                   <div class="form-group">  
